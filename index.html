@@ -442,6 +442,10 @@ button:hover{
   .video-overlay{
     padding:22px;
   }
+
+  .video-hint{
+    font-size:11px;
+  }
 }
 
 </style>
@@ -552,6 +556,71 @@ O contador está marcado para 00:00 de 21/09/2026.
 <audio id="birthdayMusic" preload="auto">
 <source src="music.mp3" type="audio/mpeg">
 </audio>
+
+</section>
+
+
+<section class="video-section" aria-label="Momentos especiais">
+
+  <article class="video-card">
+    <video class="scroll-video" muted loop playsinline preload="metadata">
+      <source src="video1.mp4" type="video/mp4">
+      Seu navegador não suporta vídeos HTML5.
+    </video>
+
+    <div class="video-overlay">
+      <div class="video-text">
+        <span class="video-number">01 · Um momento especial</span>
+        <h2>Que seu sorriso continue iluminando tudo. ❤️</h2>
+        <p>
+          Hoje é um dia para celebrar você, sua história e todas as coisas
+          bonitas que ainda estão por vir.
+        </p>
+      </div>
+    </div>
+
+    <div class="video-hint">Passe o mouse para assistir com som 🎵</div>
+  </article>
+
+  <article class="video-card">
+    <video class="scroll-video" muted loop playsinline preload="metadata">
+      <source src="video2.mp4" type="video/mp4">
+      Seu navegador não suporta vídeos HTML5.
+    </video>
+
+    <div class="video-overlay">
+      <div class="video-text">
+        <span class="video-number">02 · Para você</span>
+        <h2>Você merece um aniversário tão lindo quanto você. 🌷</h2>
+        <p>
+          Que nunca faltem carinho, sonhos, abraços apertados e motivos
+          para guardar cada novo momento no coração.
+        </p>
+      </div>
+    </div>
+
+    <div class="video-hint">Passe o mouse para assistir com som 🎵</div>
+  </article>
+
+  <article class="video-card">
+    <video class="scroll-video" muted loop playsinline preload="metadata">
+      <source src="video3.mp4" type="video/mp4">
+      Seu navegador não suporta vídeos HTML5.
+    </video>
+
+    <div class="video-overlay">
+      <div class="video-text">
+        <span class="video-number">03 · Feliz aniversário</span>
+        <h2>Que esse seja apenas o começo de muitos capítulos felizes. 💕</h2>
+        <p>
+          Feliz aniversário, Sabrina. Que a vida seja generosa com você
+          e que possamos criar muitos outros momentos inesquecíveis juntos.
+        </p>
+      </div>
+    </div>
+
+    <div class="video-hint">Passe o mouse para assistir com som 🎵</div>
+  </article>
 
 </section>
 
@@ -990,6 +1059,8 @@ videoCards.forEach(card => {
     try {
       await video.play();
     } catch (e) {
+      // Alguns navegadores bloqueiam áudio iniciado apenas pelo mouse.
+      // Nesse caso, mantém o vídeo funcionando sem som.
       video.muted = true;
       video.play().catch(() => {});
     }
