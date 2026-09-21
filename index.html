@@ -1036,6 +1036,7 @@ const videoObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       // Ao rolar até o vídeo, ele começa automaticamente sem som.
       video.muted = true;
+      video.volume = 0;
       video.play().catch(() => {});
     } else {
       // Quando sair da área visível, pausa.
@@ -1051,25 +1052,23 @@ videoCards.forEach(card => {
 
   videoObserver.observe(card);
 
-  // Mouse em cima: reproduz com som.
+  // Mouse em cima: continua reproduzindo, sempre sem som.
   card.addEventListener("mouseenter", async () => {
-    video.muted = false;
-    video.volume = 0.9;
+    video.muted = true;
+    video.volume = 0;
 
     try {
       await video.play();
     } catch (e) {
-      // Alguns navegadores bloqueiam áudio iniciado apenas pelo mouse.
-      // Nesse caso, mantém o vídeo funcionando sem som.
       video.muted = true;
-      video.play().catch(() => {});
     }
   });
 
-  // Mouse saiu: pausa e tira o som.
+  // Mouse saiu: pausa e mantém o vídeo mutado.
   card.addEventListener("mouseleave", () => {
     video.pause();
     video.muted = true;
+    video.volume = 0;
   });
 });
 
