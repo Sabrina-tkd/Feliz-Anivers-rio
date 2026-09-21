@@ -322,6 +322,128 @@ button:hover{
     font-size:38px;
   }
 }
+
+/* ==============================
+   SEÇÃO DOS 3 VÍDEOS
+   ============================== */
+.video-section{
+  margin-top:70px;
+  display:flex;
+  flex-direction:column;
+  gap:70px;
+}
+
+.video-card{
+  position:relative;
+  min-height:520px;
+  border-radius:28px;
+  overflow:hidden;
+  border:1px solid rgba(126,96,70,.35);
+  background:#1b1512;
+  box-shadow:0 18px 50px rgba(73,48,35,.18);
+  isolation:isolate;
+}
+
+.video-card video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  filter:brightness(.72);
+  transform:scale(1.01);
+  transition:filter .45s ease, transform .7s ease;
+}
+
+.video-card:hover video{
+  filter:brightness(.88);
+  transform:scale(1.035);
+}
+
+.video-overlay{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  text-align:center;
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    rgba(20,14,11,.08),
+    rgba(20,14,11,.34),
+    rgba(20,14,11,.12)
+  );
+}
+
+.video-text{
+  max-width:700px;
+  color:#fffaf2;
+  text-shadow:0 3px 18px rgba(0,0,0,.65);
+}
+
+.video-text .video-number{
+  display:block;
+  margin-bottom:12px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.82;
+}
+
+.video-text h2{
+  margin:0 0 12px;
+  font-size:clamp(27px,5vw,48px);
+  font-weight:500;
+  line-height:1.12;
+}
+
+.video-text p{
+  margin:0 auto;
+  font-size:clamp(15px,2vw,19px);
+  line-height:1.7;
+}
+
+.video-hint{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  padding:9px 15px;
+  border-radius:999px;
+  background:rgba(255,250,242,.14);
+  border:1px solid rgba(255,255,255,.28);
+  color:#fff;
+  font-size:12px;
+  letter-spacing:.5px;
+  backdrop-filter:blur(7px);
+  transition:opacity .3s ease;
+  pointer-events:none;
+}
+
+.video-card:hover .video-hint{
+  opacity:0;
+}
+
+@media(max-width:520px){
+  .video-section{
+    margin-top:50px;
+    gap:40px;
+  }
+
+  .video-card{
+    min-height:430px;
+  }
+
+  .video-overlay{
+    padding:22px;
+  }
+}
+
 </style>
 </head>
 
@@ -832,6 +954,53 @@ updateCountdown,
 );
 
 })();
+
+
+
+/* VÍDEOS: começam quando entram na tela */
+const videoCards = document.querySelectorAll(".video-card");
+
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target.querySelector(".scroll-video");
+
+    if (entry.isIntersecting) {
+      // Ao rolar até o vídeo, ele começa automaticamente sem som.
+      video.muted = true;
+      video.play().catch(() => {});
+    } else {
+      // Quando sair da área visível, pausa.
+      video.pause();
+    }
+  });
+}, {
+  threshold: 0.25
+});
+
+videoCards.forEach(card => {
+  const video = card.querySelector(".scroll-video");
+
+  videoObserver.observe(card);
+
+  // Mouse em cima: reproduz com som.
+  card.addEventListener("mouseenter", async () => {
+    video.muted = false;
+    video.volume = 0.9;
+
+    try {
+      await video.play();
+    } catch (e) {
+      video.muted = true;
+      video.play().catch(() => {});
+    }
+  });
+
+  // Mouse saiu: pausa e tira o som.
+  card.addEventListener("mouseleave", () => {
+    video.pause();
+    video.muted = true;
+  });
+});
 
 </script>
 
